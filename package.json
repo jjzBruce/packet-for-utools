@@ -1,0 +1,30 @@
+{
+  "name": "packet-for-utools",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node ./script/build-end.js",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vueup/vue-quill": "^1.2.0",
+    "dayjs": "^1.11.10",
+    "element-plus": "^2.4.4",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.24",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "modern-css-reset": "^1.4.0",
+    "unocss": "^0.31.3",
+    "unplugin-auto-import": "^0.7.1",
+    "unplugin-vue-components": "^0.19.3",
+    "utools-api-types": "^2.6.3",
+    "vite": "^2.9.2",
+    "vite-plugin-pages": "^0.22.0",
+    "vite-plugin-use-modules": "^1.1.0",
+    "vue-router": "^4.0.14"
+  }
+}

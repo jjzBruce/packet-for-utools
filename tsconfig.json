@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2015", "DOM"],
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "types": [
+      "utools-api-types"
+    ]
+  }
+}

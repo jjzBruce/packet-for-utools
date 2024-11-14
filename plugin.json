@@ -1,0 +1,16 @@
+{
+	"main": "index.html",
+	"logo": "logo.png",
+	"preload": "preload.js",
+	"development": {
+		"main": "http://127.0.0.1:3000"
+	},
+	"features": [
+		{
+			"code": "basic",
+			"explain": "报文调试",
+			"cmds": ["报文调试", "报文", "调试"],
+			"icon": "logo.png"
+		}
+	]
+}

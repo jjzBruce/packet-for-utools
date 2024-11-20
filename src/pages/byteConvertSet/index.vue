@@ -1,6 +1,33 @@
 <template>
     <div>
 
+        {{ byteRules }}
+
+        <div>
+            <el-row>
+                <el-col :span="4">
+                    <el-button @click="addNewByteRule">新增报文规则</el-button>
+                </el-col>
+                <el-col :span="6">
+                    <el-input v-model="newByteRule"></el-input>
+                </el-col>
+                <el-col :offset="2" :span="2">
+                    当前选择
+                </el-col>
+                <el-col :span="6">
+                    <el-select v-model="currentByteRule" placeholder="选择规则">
+                                <el-option
+                                    v-for="([k, v]) in byteRules.entries()"
+                                    :key="k"
+                                    :label="k"
+                                    :value="k">
+                                </el-option>
+                        </el-select>
+                </el-col>
+            </el-row>
+            
+        </div>
+
         <div class="card-class">
             字节长度：<el-input-number v-model="byteLen" :min="1" label="长度"></el-input-number>
             <el-button @click="resetChoose">重置选择</el-button>
@@ -39,18 +66,17 @@
                 </el-row>
                 
                 <div v-if="v['ruleType'] === 'map'" class="map-div-class">
-                    <el-row :gutter="20">
+                    <el-row :gutter="20" v-for="(ii, index) in v['maps']" :key="ii" >
                         <el-col :span="5">
-                            <el-input placeholder="请输入内容" />
+                            <el-input v-model="ii['key']" placeholder="字节" />
                         </el-col>
                         <el-col :span="1">==></el-col>
                         <el-col :span="5">
-                            <el-input placeholder="请输入内容" />
+                            <el-input v-model="ii['val']" placeholder="映射的值" />
                         </el-col>
                         <el-col :span="6">
-                            <el-button type="primary" icon="el-icon-plus"></el-button>
-                            <el-button type="danger" icon="el-icon-delete"></el-button>
-                            <el-button icon="el-icon-search" circle></el-button>
+                            <el-button type="primary" @click="addMapItem(v['maps'])">+</el-button>
+                            <el-button type="danger" @click="removeMapItem(v['maps'], index)">-</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -68,11 +94,22 @@
   
   <script lang="ts" setup>
   import {ref} from 'vue';
+
   
+  const newByteRule = ref('');
+  const byteRules = ref(new Map());
+  const currentByteRule = ref({});
   const byteLen = ref(10);
   const chooseByteTags = ref(new Set());
   const byteRule = ref(new Map());
   const ruleType = [{ value: 'map',label: '静态转换'}, { value: 'fun',label: '动态转换'}]
+
+  function addNewByteRule() {
+    if(!byteRules.value.has(newByteRule.value)) {
+        byteRules.value.set(newByteRule.value, {});
+    }
+    newByteRule.value = "";
+  }
 
   function addRule() {
     if(chooseByteTags.value.size > 0) {
@@ -86,9 +123,25 @@
         byteRule.value.set(key, {
             byteIndexes: byteArr,
             ruleType: 'map',
-            maps: [],
+            maps: [{
+                key: "",
+                val: "",
+            }],
             script: '',
         });
+    }
+  }
+
+  function addMapItem(maps: Array<Object>) {
+    maps.push({
+        key: "",
+        val: "",
+    });
+  }
+
+  function removeMapItem(maps: Array<Object>, index: number) {
+    if(maps.length > 1) {
+        maps.splice(index, 1);
     }
   }
 

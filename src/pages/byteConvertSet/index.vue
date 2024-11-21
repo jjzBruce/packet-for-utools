@@ -1,48 +1,20 @@
 <template>
     <div>
-
-        {{ byteRules }}
-
-        <div>
-            <el-row>
-                <el-col :span="4">
-                    <el-button @click="addNewByteRule">新增报文规则</el-button>
-                </el-col>
-                <el-col :span="6">
-                    <el-input v-model="newByteRule"></el-input>
-                </el-col>
-                <el-col :offset="2" :span="2">
-                    当前选择
-                </el-col>
-                <el-col :span="6">
-                    <el-select v-model="currentByteRule" placeholder="选择规则">
-                                <el-option
-                                    v-for="([k, v]) in byteRules.entries()"
-                                    :key="k"
-                                    :label="k"
-                                    :value="k">
-                                </el-option>
-                        </el-select>
-                </el-col>
-            </el-row>
-            
-        </div>
-
-        <div class="card-class">
+        <el-card class="card">
             字节长度：<el-input-number v-model="byteLen" :min="1" label="长度"></el-input-number>
             <el-button @click="resetChoose">重置选择</el-button>
             <el-button @click="addRule">添加规则</el-button>
-        </div>
+        </el-card>
 
         {{ byteRule }}
 
-        <div class="card-class">
-            <el-tag class="byte-tag"
+        <el-card class="card-byte">
+            <el-tag class="byte-tag" size="big"
              v-for="(item, index) in byteLen" @click="byteClick(index)" :key="index"
              :type="byteTagColor(index)">{{ index }}</el-tag>
-        </div>
+        </el-card>
 
-        <div class="card-class">
+        <el-card class="card-rule">
             <div v-for="([k, v]) in byteRule.entries()" :key="k" class="outer-class">
                 <el-row :gutter="20">
                     <el-col :span="3">
@@ -84,10 +56,8 @@
                     <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 24}"
                     placeholder="输入动态转换 js 脚本" v-model="v['script']"></el-input>
                 </div>
-            <div>
-        </div>
             </div>
-        </div>
+        </el-card>
 
     </div>
   </template>
@@ -95,21 +65,15 @@
   <script lang="ts" setup>
   import {ref} from 'vue';
 
-  
-  const newByteRule = ref('');
-  const byteRules = ref(new Map());
-  const currentByteRule = ref({});
+  const props = defineProps({
+    currentByteRule: { type: Object, default: {} }
+  });
+
   const byteLen = ref(10);
   const chooseByteTags = ref(new Set());
   const byteRule = ref(new Map());
+//   const byteRule = ref(props.currentByteRule || new Map());
   const ruleType = [{ value: 'map',label: '静态转换'}, { value: 'fun',label: '动态转换'}]
-
-  function addNewByteRule() {
-    if(!byteRules.value.has(newByteRule.value)) {
-        byteRules.value.set(newByteRule.value, {});
-    }
-    newByteRule.value = "";
-  }
 
   function addRule() {
     if(chooseByteTags.value.size > 0) {
@@ -187,6 +151,19 @@
 .map-div-class {
     border: 2px splid blue;
     margin: 10px;
+}
+
+.card{
+    margin: 5px;
+}
+
+.card-byte {
+    margin: 5px;
+    background-color: #FE7A36;
+} 
+
+.card-rule {
+    margin: 2px;
 }
 
 </style>

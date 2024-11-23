@@ -30,7 +30,7 @@
     <el-card class="card">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane label="十六进制报文" name="first">
-              <PacketText/>
+              <PacketText :currentByteRule="currentByteRule" />
           </el-tab-pane>
           <el-tab-pane label="报文转JSON配置" name="second">
             <ByteConvertSet :currentByteRule="currentByteRule" />

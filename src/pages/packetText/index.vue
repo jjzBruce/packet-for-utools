@@ -6,7 +6,7 @@
         </div>
         
         <div class="card-class">
-        <el-button >转JSON</el-button>
+        <el-button @click="transferJson">转JSON</el-button>
         <el-button @click="addSpace">加空格</el-button>
         <el-button @click="removeSpace">去空格</el-button>
         <el-button @click="toUpperCase">大写化</el-button>
@@ -24,6 +24,10 @@
   
   <script lang="ts" setup>
   import {ref} from 'vue';
+
+  const props = defineProps({
+    currentByteRule: { type: Object, default: {} }
+  });
   
   const activeName = ref('first');
   const packetStr = ref('');
@@ -47,6 +51,41 @@
         }
     } else {
       alert('浏览器不支持复制到剪贴板');
+    }
+  }
+
+  function transferJson () {
+    const byteRule: Map =  props.currentByteRule.byteRule;
+    // console.log('byteRule', byteRule)
+    if(byteRule?.size <= 0) {
+      packetConvertStr.value = '{}';
+    } else {
+      const json = {};
+      for (const value of byteRule.values()) {
+        const byteIndexes = value.byteIndexes;
+        let byteVal = '';
+        for(const index in byteIndexes) {
+          byteVal += packetStr.value.substr(index, 1);
+        }
+
+        const ruleType = value.ruleType;
+        
+        let jsonKey = 'key';
+        let jsonVal = null;
+        if(ruleType === 'map') {
+            const maps = value.maps;
+            for (const item in maps) {
+              if(item.key == byteVal) {
+                jsonVal = item.val;
+                break;
+              }
+            }
+        } else if (ruleType === 'fun') {
+            // todo 
+        }
+        json[jsonKey] = jsonVal;
+      }
+      packetConvertStr.value = json;
     }
   }
   

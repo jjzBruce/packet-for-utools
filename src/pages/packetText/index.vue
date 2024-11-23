@@ -14,9 +14,10 @@
         </div>
         
         <div class="card-class">
-        结果输出：<br/>
-        {{ packetConvertStr }} <br/>
-        <el-button @click="copy" :loading="copyBtnLoading">复制</el-button>
+        结果输出：<el-button @click="copy" :loading="copyBtnLoading">复制</el-button><br/>
+        <el-card class="card-class">
+          {{ packetConvertStr }}
+        </el-card>
         </div>
     </div>
   </template>
@@ -68,9 +69,6 @@
 </script>
 <style scoped>
 .card-class {
-    background-color: #e9ede9;
-    border: 1px splid black;
     margin: 5px;;
-    padding: 5px;
 }
 </style>

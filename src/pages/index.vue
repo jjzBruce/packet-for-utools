@@ -12,10 +12,10 @@
             <el-form-item label="当前选择" class="card1">
               <el-select v-model="currentByteRule" placeholder="选择规则">
                   <el-option
-                      v-for="([k]) in byteRules.entries()"
+                      v-for="([k, v]) in byteRules.entries()"
                       :key="k"
                       :label="k"
-                      :value="k">
+                      :value="v">
                   </el-option>
                 </el-select>
             </el-form-item>
@@ -33,7 +33,7 @@
               <PacketText/>
           </el-tab-pane>
           <el-tab-pane label="报文转JSON配置" name="second">
-            <ByteConvertSet />
+            <ByteConvertSet :currentByteRule="currentByteRule" />
           </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -55,11 +55,39 @@ function handleClick(tab, event) {
 }
 
 function import1() {}
-function export1() {}
+function export1() {
+  const dataObject = { name: "张三", age: 25 };  // 假设这是要导出的数据对象
+  const jsonData = JSON.stringify(dataObject);  // 转换为JSON字符串
+  utools.showSaveDialog({
+      title: '请选择保存JSON文件的位置',
+      filters: [
+          { name: 'JSON文件', extensions: ['json'] }
+      ]
+  }, (filePath) => {
+      if (filePath) {
+          const fs = require('fs');
+          fs.writeFileSync(filePath, jsonData, 'utf8');
+          console.log('JSON数据已成功导出到文件：', filePath);
+      } else {
+          console.log('用户取消了文件保存操作');
+      }
+  });
+
+  // utools.showSaveDialog({ 
+  //   title: '保存位置', 
+  //   defaultPath: utools.getPath('downloads'),
+  //   buttonLabel: '导出'
+  // }, (filePath) => {
+
+  // });
+}
 
 function addNewByteRule() {
   if(!byteRules.value.has(newByteRule.value)) {
-      byteRules.value.set(newByteRule.value, {});
+      byteRules.value.set(newByteRule.value, {
+        name: newByteRule.value,
+        byteRule: new Map()
+      });
   }
   newByteRule.value = "";
 }

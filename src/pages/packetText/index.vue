@@ -24,14 +24,16 @@
   
   <script lang="ts" setup>
   import {ref} from 'vue';
+  import { RuleType, ByteRule, ByteProp } from '../packet'
+
 
   const props = defineProps({
-    currentByteRule: { type: Object, default: {} }
+    currentByteProp: { type: ByteProp, default: new ByteProp('') }
   });
   
   const activeName = ref('first');
   const packetStr = ref('');
-  const packetConvertStr = ref('');
+  const packetConvertStr = ref(null);
   const copyBtnText = ref('复制');
   const copyBtnLoading = ref(false);
   
@@ -55,7 +57,7 @@
   }
 
   function transferJson () {
-    packetConvertStr.value = props.currentByteRule.transferJson(packetStr.value);
+    packetConvertStr.value = props.currentByteProp.transferJson(packetStr.value);
 
     // const byteRule: Map =  props.currentByteRule.byteRule;
     // // console.log('byteRule', byteRule)

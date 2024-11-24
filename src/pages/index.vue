@@ -30,10 +30,10 @@
 
     <el-card class="card">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane label="十六进制报文" name="first">
+          <el-tab-pane label="报文字串(Hex)" name="first">
               <PacketText :currentByteProp="currentByteProp" />
           </el-tab-pane>
-          <el-tab-pane label="报文转JSON配置" name="second">
+          <el-tab-pane label="转JSON配置" name="second">
             <ByteConvertSet :currentByteProp="currentByteProp" />
           </el-tab-pane>
       </el-tabs>
@@ -66,9 +66,9 @@ function addNewByteRule() {
   if(!byteRules.value.has(newByteRule.value)) {
       const one: ByteProp = new ByteProp(newByteRule.value);
       byteRules.value.set(newByteRule.value, one);
-      // if(currentByteProp.value = '') {
-      //   currentByteProp.value = one;
-      // }
+      if(currentBytePropKey.value == '') {
+        currentBytePropKey.value = newByteRule.value;
+      }
   }
   newByteRule.value = "";
 }

@@ -1,6 +1,7 @@
 
 export class ByteRule {
     public byteIndexes: number[];
+    public ruleKey: string;
     public ruleType: string;
     public maps: {[key: string]: any}[];
     public script: string;
@@ -24,6 +25,7 @@ export class ByteProp {
         const key = byteArr.join(',');
         const br: ByteRule = new ByteRule();
         br.byteIndexes = byteArr;
+        br.ruleKey = key;
         br.ruleType = 'map';
         br.maps = [];
         br.maps.push({
@@ -39,32 +41,40 @@ export class ByteProp {
           return '{}';
         } else {
           const json = {};
-     
           for (const rule of this.byteRuleMap.values()) {
             const byteIndexes: number[] = rule.byteIndexes;
             let byteVal = '';
             for(const index in byteIndexes) {
-              byteVal += packetStr.substring(index, index+1);
+              const index2 = Number(index);
+              byteVal += packetStr.substring(index2, index2 + 2);
             }
-    
             const ruleType = rule.ruleType;
             
-            let jsonKey = 'key';
+            let jsonKey = rule.ruleKey;
             let jsonVal = null;
             if(ruleType === 'map') {
                 const maps = rule.maps;
-                for (const item in maps) {
-                  if(item['key'] == byteVal) {
+                for (const i in maps) {
+                  const item = maps[i];
+                  if(item['key'] == byteVal) {``
                     jsonVal = item['val'];
                     break;
+                  } else {
+                    console.log('不等: ', item['key'] , byteVal)
                   }
-                }
+                }``
             } else if (ruleType === 'fun') {
-                // todo 
+              const func = new Function('str', rule.script);
+              const funcResult = func(byteVal);
+              jsonVal = funcResult;
+            } else if (ruleType === 'to10') {
+              jsonVal = parseInt(byteVal, 16);
+            } else {
+              jsonVal = byteVal;
             }
             json[jsonKey] = jsonVal;
-          }
-          return json;
+          }``
+          return JSON.stringify(json);
         }
       }
 }

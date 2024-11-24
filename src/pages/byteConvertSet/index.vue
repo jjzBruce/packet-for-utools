@@ -1,7 +1,5 @@
 <template>
     <div>
-        {{ currentByteProp }}
-
         <el-card class="card">
             字节长度：<el-input-number v-model="currentByteProp.byteLen" :min="1" label="长度"></el-input-number>
             <el-button @click="resetChoose">重置选择</el-button>
@@ -15,7 +13,10 @@
         </el-card>
 
         <el-card class="card-rule">
-            <div v-for="([k, v]) in byteRuleMap.entries()" :key="k" class="outer-class">
+            <el-card v-for="([k, v]) in byteRuleMap.entries()" :key="k" class="outer-class">
+                <div slot="header" class="clearfix">
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="removeRuleItem(k)">删除</el-button>
+                </div>
                 <el-row :gutter="20">
                     <el-col :span="3">
                         字节位：
@@ -24,6 +25,9 @@
                         <el-tag class="byte-tag"
                         v-for="(item, index) in v['byteIndexes']" :key="index"
                         type="success">{{ item }}</el-tag> 
+                    </el-col>
+                    <el-col :span="6">
+                        <el-input v-model="v.ruleKey" placeholder="jsonKey" />
                     </el-col>
                     <el-col :span="6">
                         <el-select v-model="v['ruleType']" placeholder="选择规则" style="float: right;">
@@ -52,11 +56,13 @@
                         </el-col>
                     </el-row>
                 </div>
+                <div v-else-if="v['ruleType'] === 'to10'" class="map-div-class">
+                </div>
                 <div v-else>
                     <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 24}"
                     placeholder="输入动态转换 js 脚本" v-model="v['script']"></el-input>
                 </div>
-            </div>
+            </el-card>
         </el-card>
 
     </div>
@@ -76,6 +82,11 @@
   const byteRuleMap = computed(() => {
     return props.currentByteProp.byteRuleMap;
   });
+
+  function removeRuleItem(byteRuleMapKey: string) {
+    console.log('props.currentByteProp.byteRuleMap', props.currentByteProp.byteRuleMap)
+    props.currentByteProp.byteRuleMap.delete(byteRuleMapKey);
+  }
 
   function addRule() {
     if(chooseByteTags.value.size > 0) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ byteRules }}
+    <!-- {{ byteRules }} -->
     <el-card shadow="hover" class="card">
       <el-row>
           <el-col :span="4">
@@ -56,7 +56,7 @@ const currentByteProp = computed(() => {
   });
 
 function handleClick(tab, event) {
-  console.log(tab, event);
+  // console.log(tab, event);
 }
 
 function import1() {
@@ -65,12 +65,16 @@ function import1() {
     properties: ['openFile'] 
   })
   if (readPath != undefined && readPath.length > 0) {
-    console.log('readPath[0]', readPath[0])
     const readStr: string = readLocalFile(readPath[0]);
-    console.log('readStr: ', readStr)
-    const rules = JSON.parse(readStr);
-    console.log('rules: ', rules)
-
+    const jsonArr = JSON.parse(readStr);
+    console.log('rules: ', jsonArr)
+    for(const i in jsonArr) {
+      const json = jsonArr[i];
+      const name = json['name'];
+      const bp: ByteProp = new ByteProp(name);
+      bp.setFromJson(json);
+      byteRules.value.set(name, bp);
+    }
   }
 }
 
@@ -82,18 +86,16 @@ function export1() {
     buttonLabel: '导出'
   })
   if (savePath != undefined) {
-    const byteRulesArray:string[] = [];
+    const byteRulesArray = [];
     for (const [k, value] of byteRules.value.entries()) {
-      const bp: ByteProp = byteRules.value.get(k);
-      console.log('k', k);
-      console.log('bp: ', bp);
-      const json = JSON.stringify(bp);
+      const bp: ByteProp = byteRules.value.get(k);  
+      const json = bp.toJson();
+      console.log('json: ', json)
       byteRulesArray.push(json);
     }
     console.log('byteRulesArray: ', byteRulesArray)
     console.log('byteRulesArray json: ',  JSON.stringify(byteRulesArray))
-
-    // writeLocalFile(savePath, JSON.stringify(byteRulesArray))
+    writeLocalFile(savePath, JSON.stringify(byteRulesArray))
   }
 }
 

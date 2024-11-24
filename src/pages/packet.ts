@@ -8,7 +8,6 @@ export class ByteRule {
     public byteIndexes: number[];
     public ruleKey: string;
     public ruleType: string;
-    // public maps: {[key: string]: any}[];
     public maps: ByteRuleMap[];
     public script: string;
 }
@@ -22,22 +21,49 @@ export class ByteProp {
         this.byteRuleMap = new Map<string, ByteRule>();
     }
 
+    public setFromJson(json: JSON) {
+        this.name = json['name'];
+        this.byteLen = json['byteLen'];
+        this.setByteRuleMapFromJson(json['byteRuleMap']);
+    }
+
+    public toJson() {
+        const brmj = this.byteRuleMapToJson();
+        // console.log('brmj: ', brmj);
+        return {
+            name: this.name,
+            byteLen: this.byteLen,
+            byteRuleMap: brmj
+        };
+    }
+
     public byteRuleMapToJson() {
       const jsonArr = [];
       for (const rule of this.byteRuleMap.values()) {
-          const ruleJson = JSON.parse(rule);
-          jsonArr.push(ruleJson);
+          jsonArr.push({
+            byteIndexes: rule.byteIndexes,
+            ruleKey: rule.ruleKey,
+            ruleType: rule.ruleType,
+            maps: rule.maps,
+            script: rule.script,
+          });
       }
+      console.log('jsonArr: ', jsonArr)
       return jsonArr;
     }
 
-    public byteRuleMapFromJson() {
-      const jsonArr = [];
-      for (const rule of this.byteRuleMap.values()) {
-          const ruleJson = JSON.parse(rule);
-          jsonArr.push(ruleJson);
-      }
-      return jsonArr;
+    public setByteRuleMapFromJson(jsonArr: JSON[]) {
+        jsonArr.forEach(x => {
+            const br: ByteRule = new ByteRule();
+            br.byteIndexes = x['byteIndexes'];
+            br.ruleKey = x['ruleKey'];
+            br.ruleType = x['ruleType'];
+            br.maps = x['maps'];
+            br.script = x['script'];
+            console.log('json: ', x);
+            console.log('br: ', br);
+            this.byteRuleMap.set(br.byteIndexes?.join(',') || '', br);
+        })
     }
 
     public addByteRule(byteArr: number[]) {

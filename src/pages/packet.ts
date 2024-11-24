@@ -1,9 +1,15 @@
 
+export class ByteRuleMap {
+  public key: string = '';
+  public val: string = '';
+}
+
 export class ByteRule {
     public byteIndexes: number[];
     public ruleKey: string;
     public ruleType: string;
-    public maps: {[key: string]: any}[];
+    // public maps: {[key: string]: any}[];
+    public maps: ByteRuleMap[];
     public script: string;
 }
 
@@ -14,6 +20,24 @@ export class ByteProp {
     constructor(name: string) {
         this.name = name;
         this.byteRuleMap = new Map<string, ByteRule>();
+    }
+
+    public byteRuleMapToJson() {
+      const jsonArr = [];
+      for (const rule of this.byteRuleMap.values()) {
+          const ruleJson = JSON.parse(rule);
+          jsonArr.push(ruleJson);
+      }
+      return jsonArr;
+    }
+
+    public byteRuleMapFromJson() {
+      const jsonArr = [];
+      for (const rule of this.byteRuleMap.values()) {
+          const ruleJson = JSON.parse(rule);
+          jsonArr.push(ruleJson);
+      }
+      return jsonArr;
     }
 
     public addByteRule(byteArr: number[]) {
@@ -28,10 +52,7 @@ export class ByteProp {
         br.ruleKey = key;
         br.ruleType = 'map';
         br.maps = [];
-        br.maps.push({
-            key: "",
-            val: "",
-        });
+        br.maps.push(new ByteRuleMap());
         br.script = '';
         this.byteRuleMap.set(key, br);
     }
@@ -56,13 +77,11 @@ export class ByteProp {
                 const maps = rule.maps;
                 for (const i in maps) {
                   const item = maps[i];
-                  if(item['key'] == byteVal) {``
-                    jsonVal = item['val'];
+                  if(item.key == byteVal) {
+                    jsonVal = item.val;
                     break;
-                  } else {
-                    console.log('不等: ', item['key'] , byteVal)
                   }
-                }``
+                }
             } else if (ruleType === 'fun') {
               const func = new Function('str', rule.script);
               const funcResult = func(byteVal);

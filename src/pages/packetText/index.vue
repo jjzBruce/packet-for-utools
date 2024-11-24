@@ -55,38 +55,40 @@
   }
 
   function transferJson () {
-    const byteRule: Map =  props.currentByteRule.byteRule;
-    // console.log('byteRule', byteRule)
-    if(byteRule?.size <= 0) {
-      packetConvertStr.value = '{}';
-    } else {
-      const json = {};
-      for (const value of byteRule.values()) {
-        const byteIndexes = value.byteIndexes;
-        let byteVal = '';
-        for(const index in byteIndexes) {
-          byteVal += packetStr.value.substr(index, 1);
-        }
+    packetConvertStr.value = props.currentByteRule.transferJson(packetStr.value);
 
-        const ruleType = value.ruleType;
+    // const byteRule: Map =  props.currentByteRule.byteRule;
+    // // console.log('byteRule', byteRule)
+    // if(byteRule?.size <= 0) {
+    //   packetConvertStr.value = '{}';
+    // } else {
+    //   const json = {};
+    //   for (const value of byteRule.values()) {
+    //     const byteIndexes = value.byteIndexes;
+    //     let byteVal = '';
+    //     for(const index in byteIndexes) {
+    //       byteVal += packetStr.value.substr(index, 1);
+    //     }
+
+    //     const ruleType = value.ruleType;
         
-        let jsonKey = 'key';
-        let jsonVal = null;
-        if(ruleType === 'map') {
-            const maps = value.maps;
-            for (const item in maps) {
-              if(item.key == byteVal) {
-                jsonVal = item.val;
-                break;
-              }
-            }
-        } else if (ruleType === 'fun') {
-            // todo 
-        }
-        json[jsonKey] = jsonVal;
-      }
-      packetConvertStr.value = json;
-    }
+    //     let jsonKey = 'key';
+    //     let jsonVal = null;
+    //     if(ruleType === 'map') {
+    //         const maps = value.maps;
+    //         for (const item in maps) {
+    //           if(item.key == byteVal) {
+    //             jsonVal = item.val;
+    //             break;
+    //           }
+    //         }
+    //     } else if (ruleType === 'fun') {
+    //         // todo 
+    //     }
+    //     json[jsonKey] = jsonVal;
+    //   }
+    //   packetConvertStr.value = json;
+    // }
   }
   
   function addSpace() {

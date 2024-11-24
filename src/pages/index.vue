@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- {{ currentByteProp }} -->
+    {{ byteRules }}
     <el-card shadow="hover" class="card">
       <el-row>
           <el-col :span="4">
@@ -48,7 +48,7 @@ import PacketText from './packetText/index.vue'
 import ByteConvertSet from './byteConvertSet/index.vue'
 
 const newByteRule = ref('');
-const byteRules = ref(new Map<String, ByteProp>());
+const byteRules = ref(new Map<string, ByteProp>());
 const currentBytePropKey = ref('');
 const activeName = ref('first');
 const currentByteProp = computed(() => {
@@ -59,8 +59,43 @@ function handleClick(tab, event) {
   console.log(tab, event);
 }
 
-function import1() {}
-function export1() {}
+function import1() {
+  const readPath = utools.showOpenDialog({ 
+    filters: [{ 'name': 'PacketRule.json', extensions: ['json'] }], 
+    properties: ['openFile'] 
+  })
+  if (readPath != undefined && readPath.length > 0) {
+    console.log('readPath[0]', readPath[0])
+    const readStr: string = readLocalFile(readPath[0]);
+    console.log('readStr: ', readStr)
+    const rules = JSON.parse(readStr);
+    console.log('rules: ', rules)
+
+  }
+}
+
+function export1() {
+  const savePath = utools.showSaveDialog({ 
+    title: '保存位置', 
+    defaultPath: utools.getPath('downloads'),
+    filters: [{ 'name': 'PacketRule.json', extensions: ['json'] }], 
+    buttonLabel: '导出'
+  })
+  if (savePath != undefined) {
+    const byteRulesArray:string[] = [];
+    for (const [k, value] of byteRules.value.entries()) {
+      const bp: ByteProp = byteRules.value.get(k);
+      console.log('k', k);
+      console.log('bp: ', bp);
+      const json = JSON.stringify(bp);
+      byteRulesArray.push(json);
+    }
+    console.log('byteRulesArray: ', byteRulesArray)
+    console.log('byteRulesArray json: ',  JSON.stringify(byteRulesArray))
+
+    // writeLocalFile(savePath, JSON.stringify(byteRulesArray))
+  }
+}
 
 function addNewByteRule() {
   if(!byteRules.value.has(newByteRule.value)) {

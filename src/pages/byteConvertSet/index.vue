@@ -14,10 +14,14 @@
 
         <el-card class="card-rule">
             <el-card v-for="([k, v]) in byteRuleMap.entries()" :key="k" class="outer-class">
-                <div slot="header" class="clearfix">
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="removeRuleItem(k)">删除</el-button>
+                <div slot="header" class="clearfix" style="margin-bottom: 2px;">
+                    <el-row>
+                        <el-col :offset="21" :span="3">
+                            <el-button type="danger" style="float: right;" @click="removeRuleItem(k)">删除</el-button>
+                        </el-col>
+                    </el-row>
                 </div>
-                <el-row :gutter="20">
+                <el-row :gutter="20" style="margin-bottom: 2px;">
                     <el-col :span="3">
                         字节位：
                     </el-col>
@@ -29,7 +33,7 @@
                     <el-col :span="6">
                         <el-input v-model="v.ruleKey" placeholder="jsonKey" />
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :offset="3" :span="6">
                         <el-select v-model="v['ruleType']" placeholder="选择规则" style="float: right;">
                             <el-option
                             v-for="item in RuleType"
@@ -59,8 +63,26 @@
                 <div v-else-if="v['ruleType'] === 'to10'" class="map-div-class">
                 </div>
                 <div v-else>
-                    <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 24}"
-                    placeholder="输入动态转换 js 脚本" v-model="v['script']"></el-input>
+                    <div  style="margin-bottom: 2px;">
+                        <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 24}"
+                        placeholder="输入 js 脚本" v-model="v['script']"></el-input>
+                    </div>
+                    <el-card>
+                        <div slot="header" class="clearfix" style="margin-bottom: 2px;">
+                            脚本测试
+                        </div>
+                        <el-row>
+                            <el-col :span="6">
+                                <el-input v-model="v.scriptTestParam" placeholder="入参"></el-input>
+                            </el-col>
+                            <el-col :offset="1" :span="3">
+                                <el-button type="primary" @click="testJs(v)">测试</el-button>
+                            </el-col>
+                            <el-col :span="14">
+                                <el-input v-model="v.scriptTestResult" placeholder="结果" readonly></el-input>
+                            </el-col>
+                        </el-row>
+                    </el-card>
                 </div>
             </el-card>
         </el-card>
@@ -85,6 +107,16 @@
   function removeRuleItem(byteRuleMapKey: string) {
     // console.log('props.currentByteProp.byteRuleMap', props.currentByteProp.byteRuleMap)
     props.currentByteProp.byteRuleMap.delete(byteRuleMapKey);
+  }
+
+  function testJs(v: ByteRule) {
+    try {
+        const func = new Function('str', v.script);
+        const funcResult = func(v.scriptTestParam);
+        v.scriptTestResult = funcResult;
+    } catch(e) {
+        v.scriptTestResult = e;
+    }
   }
 
   function addRule() {

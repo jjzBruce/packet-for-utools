@@ -10,6 +10,8 @@ export class ByteRule {
     public ruleType: string;
     public maps: ByteRuleMap[];
     public script: string;
+    public scriptTestParam: string;
+    public scriptTestResult: string;
 }
 
 export class ByteProp {
@@ -112,9 +114,13 @@ export class ByteProp {
                   }
                 }
             } else if (ruleType === 'fun') {
-              const func = new Function('str', rule.script);
-              const funcResult = func(byteVal);
-              jsonVal = funcResult;
+              try {
+                const func = new Function('str', rule.script);
+                const funcResult = func(byteVal);
+                jsonVal = funcResult;
+              } catch (e) {
+                jsonVal = e;
+              }
             } else if (ruleType === 'to10') {
               jsonVal = parseInt(byteVal, 16);
             } else {

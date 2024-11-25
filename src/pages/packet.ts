@@ -60,8 +60,8 @@ export class ByteProp {
             br.ruleType = x['ruleType'];
             br.maps = x['maps'];
             br.script = x['script'];
-            console.log('json: ', x);
-            console.log('br: ', br);
+            // console.log('json: ', x);
+            // console.log('br: ', br);
             this.byteRuleMap.set(br.byteIndexes?.join(',') || '', br);
         })
     }
@@ -91,12 +91,15 @@ export class ByteProp {
           for (const rule of this.byteRuleMap.values()) {
             const byteIndexes: number[] = rule.byteIndexes;
             let byteVal = '';
-            for(const index in byteIndexes) {
-              const index2 = Number(index);
-              byteVal += packetStr.substring(index2, index2 + 2);
+            for(const i in byteIndexes) {
+              const start = Number(byteIndexes[i]) * 2;
+              const end = Math.min(start + 2, packetStr.length);
+              byteVal += packetStr.substring(start, end);
+              // console.log('byteVal 截取: ', byteIndexes, i, start, end);
             }
+            // console.log('byteVal: ', byteVal);
+
             const ruleType = rule.ruleType;
-            
             let jsonKey = rule.ruleKey;
             let jsonVal = null;
             if(ruleType === 'map') {
@@ -118,7 +121,7 @@ export class ByteProp {
               jsonVal = byteVal;
             }
             json[jsonKey] = jsonVal;
-          }``
+          }
           return JSON.stringify(json);
         }
       }

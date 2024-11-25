@@ -67,7 +67,7 @@ function import1() {
   if (readPath != undefined && readPath.length > 0) {
     const readStr: string = readLocalFile(readPath[0]);
     const jsonArr = JSON.parse(readStr);
-    console.log('rules: ', jsonArr)
+    // console.log('rules: ', jsonArr)
     for(const i in jsonArr) {
       const json = jsonArr[i];
       const name = json['name'];
@@ -90,11 +90,11 @@ function export1() {
     for (const [k, value] of byteRules.value.entries()) {
       const bp: ByteProp = byteRules.value.get(k);  
       const json = bp.toJson();
-      console.log('json: ', json)
+      // console.log('json: ', json)
       byteRulesArray.push(json);
     }
-    console.log('byteRulesArray: ', byteRulesArray)
-    console.log('byteRulesArray json: ',  JSON.stringify(byteRulesArray))
+    // console.log('byteRulesArray: ', byteRulesArray)
+    // console.log('byteRulesArray json: ',  JSON.stringify(byteRulesArray))
     writeLocalFile(savePath, JSON.stringify(byteRulesArray))
   }
 }

@@ -42,11 +42,11 @@
                 </el-row>
                 
                 <div v-if="v['ruleType'] === 'map'" class="map-div-class">
-                    <el-row :gutter="20" v-for="(ii, index) in v['maps']" :key="ii" >
+                    <el-row :gutter="20" v-for="(ii, index) in v['maps']" :key="ii" class="rule-map-row-class">
                         <el-col :span="5">
                             <el-input v-model="ii['key']" placeholder="字节" />
                         </el-col>
-                        <el-col :span="1">==></el-col>
+                        <el-col :span="2">==></el-col>
                         <el-col :span="5">
                             <el-input v-model="ii['val']" placeholder="映射的值" />
                         </el-col>
@@ -76,7 +76,6 @@
     currentByteProp: { type: ByteProp, default: new ByteProp('') }
   });
 
-  const byteLen = ref(10);
   const chooseByteTags = ref(new Set<number>());
 
   const byteRuleMap = computed(() => {
@@ -84,7 +83,7 @@
   });
 
   function removeRuleItem(byteRuleMapKey: string) {
-    console.log('props.currentByteProp.byteRuleMap', props.currentByteProp.byteRuleMap)
+    // console.log('props.currentByteProp.byteRuleMap', props.currentByteProp.byteRuleMap)
     props.currentByteProp.byteRuleMap.delete(byteRuleMapKey);
   }
 
@@ -131,6 +130,10 @@
   
 </script>
 <style scoped>
+.rule-map-row-class {
+    margin-bottom: 2px;
+}
+
 .card-class {
     background-color: #e9ede9;
     border: 1px splid black;
